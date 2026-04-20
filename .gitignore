@@ -37,6 +37,10 @@ firebase_hosting/public/api/
 .claude/memory/sessions/
 .claude/logs/
 
+# v0.16.x: Claude Code spawn_task worktrees (임시 git repo, embedded submodule 으로 잘못 감지됨)
+.claude/worktrees/
+.claude/scheduled_tasks.lock
+
 # Hypothesis 캐시 (속성 기반 테스트)
 .hypothesis/
 

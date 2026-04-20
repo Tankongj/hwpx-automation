@@ -216,8 +216,8 @@ def test_rfp_extractor_falls_back_without_python_hwpx(tmp_path, monkeypatch):
 
 
 def test_instructor_is_available():
+    pytest.importorskip("instructor", reason="instructor not installed in this env (CI/minimal)")
     from src.parser.instructor_resolver import is_available
-    # 이 프로젝트는 instructor 를 dev 에 설치 — 항상 True
     assert is_available() is True
 
 
@@ -235,7 +235,9 @@ def test_create_default_client_uses_instructor_when_opted_in(
 
     instructor.from_genai 내부 호출을 통째로 mock — 실 네트워크 회피.
     """
+    pytest.importorskip("instructor", reason="instructor not installed in this env (CI/minimal)")
     monkeypatch.setenv("APPDATA", str(tmp_path))
+    monkeypatch.setenv("GEMINI_API_KEY", "test-fake-key-for-unit-test-only")
     from src.settings import app_config
     from src.parser import gemini_resolver, instructor_resolver
 
@@ -312,6 +314,7 @@ def test_batch_submit_error_path():
 
 def test_mcp_app_creates():
     """create_mcp_app 이 예외 없이 FastMCP 인스턴스 반환."""
+    pytest.importorskip("mcp", reason="mcp/FastMCP not installed in this env (CI/minimal)")
     from src.mcp_server.server import create_mcp_app
 
     app = create_mcp_app()

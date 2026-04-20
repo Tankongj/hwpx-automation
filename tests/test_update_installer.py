@@ -543,9 +543,11 @@ def test_appconfig_has_update_manifest_url():
     from src.settings.app_config import AppConfig
 
     cfg = AppConfig()
-    # 플레이스홀더는 빈 문자열이 기본 — 체크 건너뛰도록 설계됨
     assert hasattr(cfg, "update_manifest_url")
-    assert cfg.update_manifest_url == ""
+    # v0.16.0+: 빈 문자열 (개발 중) 또는 https URL (프로덕션) 둘 다 허용
+    if cfg.update_manifest_url:
+        assert cfg.update_manifest_url.startswith("https://")
+        assert cfg.update_manifest_url.endswith("manifest.json")
     assert cfg.update_prefer_patch is True
 
 
