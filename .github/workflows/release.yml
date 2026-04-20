@@ -107,6 +107,10 @@ jobs:
 
           ARGS="--new dist/HwpxAutomation --new-version $VERSION --output release/v$VERSION"
           ARGS="$ARGS --notes-url https://github.com/${{ github.repository }}/releases/tag/v$VERSION"
+          # v0.17.4: zip 자산은 GitHub Releases 무제한 대역폭으로 호스팅 (Firebase 무료 티어의 큰 파일 503 회피).
+          # Firebase 는 manifest.json 만 (490 bytes, 항상 안정) 서빙. 사용자 앱은:
+          # 1) Firebase manifest fetch → 2) 그 안의 GitHub Releases zip URL 로 다운로드.
+          ARGS="$ARGS --base-url https://github.com/${{ github.repository }}/releases/download"
 
           if [ "$HAS_PREV" = "true" ] && [ -n "$PREV" ]; then
             ARGS="$ARGS --old release/prev/old_dist/HwpxAutomation --old-version $PREV"
