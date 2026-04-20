@@ -139,17 +139,19 @@ def run_firebase_deploy(
         print("💡 --dry-run: 실제 업로드는 건너뜀.")
         return 0
 
-    cmd = ["firebase", "deploy", "--only", "hosting", "--project", project_id]
-    if token:
-        cmd.extend(["--token", token])
-
+    # Windows: npm global install 한 firebase 는 firebase.cmd / firebase.ps1 wrapper.
+    # subprocess.run(shell=False) 에서는 정확한 경로 (확장자 포함) 필요 → shutil.which 사용.
     firebase = shutil.which("firebase")
     if not firebase:
         print("❌ firebase CLI 가 설치되어 있지 않습니다.", file=sys.stderr)
         print("   → npm install -g firebase-tools", file=sys.stderr)
         return 2
 
-    print(f"▶ {' '.join(cmd[:4])} ...")
+    cmd = [firebase, "deploy", "--only", "hosting", "--project", project_id]
+    if token:
+        cmd.extend(["--token", token])
+
+    print(f"▶ {firebase} deploy --only hosting --project {project_id} ...")
     result = subprocess.run(cmd, cwd=str(REPO_ROOT))
     return result.returncode
 
