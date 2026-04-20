@@ -77,9 +77,9 @@ class AppConfig:
     auth_backend: str = "local"         # v0.9.0: "local" / "firebase"
     firebase_api_key: str = ""          # v0.9.0: Firebase Auth 용 Web API Key
     auto_update_check: bool = True      # 앱 시작 시 새 버전 체크
-    # v0.16.0: Firebase App Hosting manifest 기반 자동 업데이트.
-    # TODO: Firebase 프로젝트 생성 후 실제 URL 로 교체 (예: https://hwpx-automation.web.app/api/manifest.json)
-    update_manifest_url: str = ""  # 빈 문자열이면 업데이트 체크 건너뜀 (개발 중 / 미설정 상태)
+    # v0.16.0: Firebase Hosting manifest 기반 자동 업데이트.
+    # 프로젝트: hwpx-automation (GCP 조직: farmlearning.co.kr, 무료 Spark 요금제)
+    update_manifest_url: str = "https://hwpx-automation.web.app/api/manifest.json"
     update_prefer_patch: bool = True    # True 면 patch update 우선 (작은 용량). False 면 항상 full
     update_repo: str = "Tankongj/hwpx-automation"  # (legacy) GitHub {owner}/{repo} — manifest_url 미설정 시 fallback
     # v0.11.0: 원격 에러 리포팅 (Sentry) — opt-in, DSN 없으면 무동작
