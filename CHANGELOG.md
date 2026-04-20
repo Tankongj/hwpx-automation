@@ -5,6 +5,59 @@
 포맷은 [Keep a Changelog](https://keepachangelog.com/) 를 따르며, 버전 번호는
 [Semantic Versioning](https://semver.org/) 을 사용합니다.
 
+## [0.17.4] — 2026-04-21
+
+### 🚀 첫 정상 배포 — v0.16.0 의 Auto-Update Foundation 가동
+
+v0.16.0 ~ v0.17.3 은 GitHub Actions CI 환경 적응 과정에서의 내부 빌드 시도 (모두 정리됨).
+v0.17.4 가 **GitHub + Firebase 하이브리드 호스팅으로 가동된 첫 정상 배포**.
+
+### 🌉 하이브리드 호스팅 아키텍처
+
+```
+[사용자 앱]
+    │
+    ├─ 1. Firebase 에서 manifest fetch (490 bytes, 항상 안정)
+    │     https://hwpx-automation.web.app/api/manifest.json
+    │
+    └─ 2. manifest.full.url 따라 GitHub Releases 에서 zip 다운로드 (~250 MB)
+          https://github.com/Tankongj/hwpx-automation/releases/download/v0.17.4/full.zip
+```
+
+**왜 분리?**
+- Firebase 무료 티어는 큰 파일 (~250 MB+) 전송 시 503 backend read error 발생
+- Firebase 는 작은 manifest.json 만 (CDN 안정), GitHub Releases 가 무제한 대역폭으로 zip 호스팅
+- 200명 규모 + 월 수십 GB 트래픽 모두 무료
+
+### 🛠 CI/CD 안정화 (v0.17.0 ~ v0.17.4 누적 fix)
+
+- **`release.yml` install step**: `pip install -e ".[dev,build]"` (pyproject 의 dev+build extras 사용)
+- **`release.yml` permissions**: `contents: write` 추가 (GitHub Release 생성 권한)
+- **`release.yml` build_patch**: `--base-url` 을 GitHub Releases URL 로 (Firebase 503 회피)
+- **`scripts/publish_firebase.py`**: Windows `firebase.cmd` 경로 `shutil.which()` 결과 사용
+- **`tests/test_v120_six_tracks.py`**: `instructor` / `mcp` 모듈 누락 환경에서 `pytest.importorskip` 으로 자동 skip
+- **`tests/test_update_installer.py`**: AppConfig manifest_url 테스트가 빈 문자열 + 실 URL 둘 다 허용
+- **`.gitignore`**: `.claude/worktrees/` + `.claude/scheduled_tasks.lock` 추가 (embedded git submodule 오인 방지)
+- **`.github/workflows/release.yml`** 신규 — 태그 push → 빌드 → patch + manifest → GitHub Release + Firebase 자동화
+
+### 🧪 CI 결과
+
+```
+488 passed, 8 skipped (instructor/mcp/api_key 자동 skip)
+PyInstaller COLLECT 성공
+GitHub Release 자동 생성 (full.zip 259 MB + manifest.json 490 B)
+Firebase Hosting 배포 (manifest.json 만)
+```
+
+### 📋 사용자 액션 (v0.17.4 부터)
+
+지인에게 한 줄 공유:
+```
+https://github.com/Tankongj/hwpx-automation/releases/latest
+```
+
+이후 모든 버전은 앱 안에서 자동 업데이트 (재설치 없이).
+
 ## [0.16.0] — 2026-04-20
 
 ### 🚀 Auto-Update Foundation — 재설치 없는 자동 업데이트
