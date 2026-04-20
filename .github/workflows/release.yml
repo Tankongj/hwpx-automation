@@ -57,8 +57,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller
+          # pyproject.toml 의 dev + build 그룹 사용 → pytest, pytest-qt, hypothesis, pyinstaller 모두 포함
+          pip install -e ".[dev,build]"
+          # 자동 업데이트 모듈이 사용하는 transitive dep 명시 (anthropic 으로 들어오긴 하지만 안전 마진)
+          pip install httpx
 
       - name: Run tests
         run: python -m pytest tests/ -q
