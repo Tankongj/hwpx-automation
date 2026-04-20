@@ -1,0 +1,39 @@
+MIT License
+
+Copyright (c) 2026 HWPX Automation Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+--------------------------------------------------------------------------------
+Third-party components
+--------------------------------------------------------------------------------
+
+This project includes HWPX XML manipulation logic ported and adapted from:
+  - Tankongj/hwpx-proposal-automation (MIT License)
+
+Runtime dependencies (license 요약 — 각 패키지 설치 폴더의 원문 참고):
+  - PySide6         — LGPL v3
+  - lxml            — BSD
+  - google-genai    — Apache 2.0
+  - cryptography    — Apache 2.0 / BSD
+  - keyring         — MIT
+  - PyInstaller     — GPL w/ exception (상업 배포 OK)
+
+PySide6 은 LGPL 의무에 따라 사용자가 동적 링크된 Qt 라이브러리를 교체 가능해야 한다.
+PyInstaller --onedir 빌드는 Qt DLL 을 별도 파일로 유지하므로 이 조건을 자동 충족한다.

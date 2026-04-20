@@ -1,0 +1,152 @@
+name: Release
+
+# v0.16.0 — 태그 푸쉬 → PyInstaller 빌드 → patch 생성 → Firebase 배포 + GitHub Release
+#
+# 작동 조건:
+#   1. GitHub Secrets 에 FIREBASE_TOKEN 등록 필요 (`firebase login:ci` 결과)
+#   2. (선택) 이전 릴리스 dist 를 GitHub Release 에서 다운로드해 patch 생성
+#
+# Secrets 미설정 시에도 build + artifact 업로드는 작동. Firebase 배포만 skip.
+
+on:
+  push:
+    tags:
+      - 'v*'  # v0.16.0, v0.16.1 등
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '릴리스 버전 (예: 0.16.0)'
+        required: true
+      previous_version:
+        description: '이전 버전 (patch 생성용, 예: 0.15.0). 비우면 full only.'
+        required: false
+        default: ''
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 태그 전체 받기
+
+      - name: Determine version
+        id: version
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            PREV="${{ github.event.inputs.previous_version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+            # 이전 태그 자동 탐색 (v* 중 현재 바로 아래)
+            PREV=$(git tag -l 'v*' --sort=-v:refname | sed -n '2p' | sed 's/^v//')
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "previous=$PREV" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION (previous: $PREV)"
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Run tests
+        run: python -m pytest tests/ -q
+        shell: bash
+
+      - name: Build with PyInstaller
+        shell: bash
+        run: |
+          if [ -f build.spec ]; then
+            pyinstaller build.spec --noconfirm
+          else
+            pyinstaller src/main.py --name HwpxAutomation --noconfirm --windowed
+          fi
+
+      - name: Download previous release (for patch diff)
+        if: steps.version.outputs.previous != ''
+        id: prev_download
+        continue-on-error: true
+        shell: bash
+        run: |
+          PREV="${{ steps.version.outputs.previous }}"
+          mkdir -p release/prev
+          # GitHub Release 에서 full.zip 받아오기
+          URL="https://github.com/${{ github.repository }}/releases/download/v${PREV}/full.zip"
+          if curl -fL -o release/prev/full.zip "$URL"; then
+            cd release/prev
+            powershell -Command "Expand-Archive -Path full.zip -DestinationPath old_dist"
+            echo "has_prev=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_prev=false" >> $GITHUB_OUTPUT
+            echo "⚠ 이전 릴리스 자산을 찾지 못함 — patch 생성 스킵"
+          fi
+
+      - name: Build patch + manifest
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          PREV="${{ steps.version.outputs.previous }}"
+          HAS_PREV="${{ steps.prev_download.outputs.has_prev }}"
+
+          ARGS="--new dist/HwpxAutomation --new-version $VERSION --output release/v$VERSION"
+          ARGS="$ARGS --notes-url https://github.com/${{ github.repository }}/releases/tag/v$VERSION"
+
+          if [ "$HAS_PREV" = "true" ] && [ -n "$PREV" ]; then
+            ARGS="$ARGS --old release/prev/old_dist/HwpxAutomation --old-version $PREV"
+          else
+            ARGS="$ARGS --skip-patch"
+          fi
+
+          python scripts/build_patch.py $ARGS
+
+      - name: Upload artifacts (always)
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-v${{ steps.version.outputs.version }}
+          path: release/v${{ steps.version.outputs.version }}/
+          retention-days: 90
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/v${{ steps.version.outputs.version }}/*
+          generate_release_notes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to Firebase Hosting
+        if: env.FIREBASE_TOKEN != ''
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          npm install -g firebase-tools
+          python scripts/publish_firebase.py `
+            --release-dir release/v${{ steps.version.outputs.version }} `
+            --version ${{ steps.version.outputs.version }} `
+            --project hwpx-automation `
+            --token "$env:FIREBASE_TOKEN"
+
+      - name: Summary
+        shell: bash
+        run: |
+          echo "## 📦 Release v${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Artifacts:" >> $GITHUB_STEP_SUMMARY
+          ls -la release/v${{ steps.version.outputs.version }}/ >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "- ✅ Firebase 배포 완료: https://hwpx-automation.web.app" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ⚠ Firebase 배포 스킵 (FIREBASE_TOKEN secret 미설정)" >> $GITHUB_STEP_SUMMARY
+          fi

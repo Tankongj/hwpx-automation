@@ -1,0 +1,48 @@
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+env/
+
+build/
+dist/
+*.spec.bak
+
+.env
+.env.local
+*.key
+
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+tests/fixtures/*.hwpx
+tests/tmp/
+scratch/
+
+# v0.16.0: 릴리스 산출물 / Firebase 배포 폴더 / 큰 zip 파일
+release/
+firebase_hosting/public/releases/
+firebase_hosting/public/api/
+*.zip
+
+# v0.15.x: 세션 메모리 시스템 — 개인 작업 이력 (보안)
+.claude/memory/sessions/
+.claude/logs/
+
+# Hypothesis 캐시 (속성 기반 테스트)
+.hypothesis/
+
+# 자료 폴더 (큰 샘플 / 개인 자료)
+02_정성제안서 형식 서식 v2/
+26_*/
+99_*/
+node_modules/
+

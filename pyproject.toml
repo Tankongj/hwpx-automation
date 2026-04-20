@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hwpx-automation"
+version = "0.16.0"
+description = "AI-assisted HWPX document automation desktop app"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "HWPX Automation Project" },
+]
+dependencies = [
+    "lxml>=5.0",
+    "PySide6>=6.6",
+    "google-genai>=1.0",
+    "openai>=1.50",
+    "anthropic>=0.40",
+    "cryptography>=42",
+    "keyring>=24",
+    "pdfplumber>=0.11",
+    "olefile>=0.47",
+    # v0.12.0: HWPX pure-Python 라이브러리 (lxml 수동 조작 대체)
+    "python-hwpx>=2.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-qt>=4.4",
+    # v0.11.0: property-based testing
+    "hypothesis>=6.130",
+]
+build = [
+    "pyinstaller>=6.0",
+]
+
+[project.scripts]
+hwpx-automation = "src.main:main"
+hwpx-cli = "src.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

@@ -1,0 +1,68 @@
+{
+  "chars": 100000,
+  "reps": 1,
+  "template": "D:\\03_antigravity\\25_hwpx automation v2\\templates\\00_기본_10단계스타일.hwpx",
+  "include_quant": true,
+  "runs": [
+    [
+      {
+        "name": "synthesize(100,000 chars)",
+        "elapsed_sec": 0.014,
+        "peak_mb": 0.86,
+        "extra": {
+          "actual_chars": 185441
+        }
+      },
+      {
+        "name": "regex_parser.parse_file",
+        "elapsed_sec": 0.127,
+        "peak_mb": 2.12,
+        "extra": {
+          "blocks": 3415,
+          "ambiguous": 736
+        }
+      },
+      {
+        "name": "template_analyzer.analyze",
+        "elapsed_sec": 0.008,
+        "peak_mb": 0.26,
+        "extra": {}
+      },
+      {
+        "name": "md_to_hwpx.convert + fix_namespaces",
+        "elapsed_sec": 0.549,
+        "peak_mb": 9.03,
+        "extra": {
+          "output_bytes": 51021,
+          "output_mb": 0.05
+        }
+      },
+      {
+        "name": "verify_hwpx.verify",
+        "elapsed_sec": 0.106,
+        "peak_mb": 4.1,
+        "extra": {
+          "rate_pct": 72.7,
+          "structural_ok": 7
+        }
+      },
+      {
+        "name": "quant.parse_document",
+        "elapsed_sec": 0.205,
+        "peak_mb": 6.91,
+        "extra": {
+          "cells": 1497,
+          "forms": 4
+        }
+      },
+      {
+        "name": "quant.save_document",
+        "elapsed_sec": 0.702,
+        "peak_mb": 23.36,
+        "extra": {
+          "output_mb": 2.39
+        }
+      }
+    ]
+  ]
+}
