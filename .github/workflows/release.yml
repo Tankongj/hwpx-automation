@@ -120,6 +120,22 @@ jobs:
 
           python scripts/build_patch.py $ARGS
 
+      - name: Build Inno Setup installer (.exe)
+        shell: bash
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # windows-latest runner 에는 Inno Setup 6 가 기본 설치됨 (ISCC.exe 경로: C:\Program Files (x86)\Inno Setup 6\)
+          ISCC="/c/Program Files (x86)/Inno Setup 6/ISCC.exe"
+          if [ ! -f "$ISCC" ]; then
+            echo "⚠ Inno Setup 미설치 — choco 로 설치"
+            choco install innosetup -y --no-progress
+          fi
+          # setup.iss 컴파일 → installer/output/HwpxAutomation-Setup-vX.Y.Z.exe
+          "$ISCC" //DVersion=$VERSION installer/setup.iss
+          # 산출물을 release 자산에 합류
+          cp "installer/output/HwpxAutomation-Setup-v${VERSION}.exe" "release/v${VERSION}/"
+          ls -la "release/v${VERSION}/"
+
       - name: Upload artifacts (always)
         uses: actions/upload-artifact@v4
         with:

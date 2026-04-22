@@ -1,186 +1,194 @@
-# HWPX Automation v0.2.0
+# HWPX Automation
 
-한글(HWPX) 문서를 AI 보조로 자동 작성하는 **Windows 데스크톱 앱**.
-
-원고 `.txt` + 템플릿 `.hwpx` → 스타일/계층이 유지된 완성본 `.hwpx`.
-
-공무원·행정사·법무사·변호사 등 한글 문서를 반복 작성하는 사무직 전문가군을 위해 설계됐습니다.
+> 한글(HWPX) 문서를 AI 가 알아서 만들어주는 **Windows 데스크톱 앱**
+>
+> 공무원·행정사·법무사·변호사 등 한글 문서를 반복 작성하는 분들을 위해 만들었습니다.
 
 ---
 
-## 5분 가이드 (처음 사용)
+## 📥 설치 방법 (Windows — 3분)
 
-### 1. 앱 실행
+### 1️⃣ 최신 설치 파일 다운로드
 
-이미 빌드된 배포본이 있다면:
+👉 **[여기 클릭 → 최신 설치 파일 받기](https://github.com/Tankongj/hwpx-automation/releases/latest)**
+
+페이지 아래쪽 **"Assets"** 섹션에서 **`HwpxAutomation-Setup-v0.xx.x.exe`** 파일을 클릭해 받으세요.
+
+| 파일 | 설명 | 누가 |
+|------|------|------|
+| **`HwpxAutomation-Setup-v0.xx.x.exe`** ⭐ | 설치 프로그램 (추천) | **일반 사용자** |
+| `full.zip` | 압축 파일 | 개발자/고급 사용자 |
+| `manifest.json` | 자동 업데이트용 | 앱 내부 사용 |
+
+### 2️⃣ 다운로드한 `.exe` 파일 더블클릭
+
+설치 마법사가 한국어로 안내해드립니다:
+1. **"다음"** 2~3번 클릭
+2. 설치 위치 확인 (기본값 그대로 OK)
+3. **"바탕화면 바로가기 만들기"** 체크돼 있는지 확인
+4. **"설치"** 클릭 → 1~2분 대기
+5. **"마침"** 클릭
+
+### 3️⃣ ⚠️ "Windows에서 PC를 보호했습니다" 경고가 뜨면
+
+이건 **서명 안 된 신규 앱에 대한 Windows 의 일반적 경고**입니다. 바이러스 아니니 안심하세요.
+
+**대처 방법** (2번 클릭):
 
 ```
-dist\HwpxAutomation\HwpxAutomation.exe
+┌──────────────────────────────────────┐
+│ Windows에서 PC를 보호했습니다       │
+│                                      │
+│ [추가 정보]  ← 이거 클릭            │
+│                                      │
+└──────────────────────────────────────┘
+
+         ↓ 클릭 후
+
+┌──────────────────────────────────────┐
+│ 게시자: 알 수 없음                  │
+│ 앱:     HwpxAutomation-Setup-xxx.exe│
+│                                      │
+│ [실행]   [실행 안 함]               │
+│  ↑ 이거 클릭                        │
+└──────────────────────────────────────┘
 ```
 
-폴더 전체(210MB 정도) 를 원하는 위치로 복사해서 쓰시면 됩니다. 설치 불필요.
+> 💡 **왜 경고가 뜨나요?** Microsoft 코드 서명 인증서는 연간 수십만원이라 초기 배포 단계에서는 생략했습니다. 사용자 누적되면 서명 추가 예정입니다.
 
-소스에서 직접 실행하려면:
+### 4️⃣ 바탕화면 아이콘 더블클릭으로 실행
+
+끝입니다. 다음부턴 바탕화면 아이콘만 누르면 됩니다.
+
+---
+
+## 🔄 자동 업데이트
+
+설치 후에는 **재설치 없이** 새 버전이 자동으로 설치됩니다:
+
+1. 앱 실행 시 자동으로 새 버전 확인
+2. 새 버전 발견 시 **"업데이트 받으시겠습니까?"** 다이얼로그 표시
+3. **"예"** 누르면 앱이 알아서 다운로드 → 재시작
+4. 사용자 설정 (API 키, 템플릿 등) 은 그대로 보존됨
+
+---
+
+## 📚 주요 기능
+
+### AI 문서 자동화
+- **기획안 원고 → 스타일 적용된 HWPX 완성본** (Gemini 2.5 Flash)
+- 10단계 계층 스타일 자동 매핑 (제목1~10)
+- A4 페이지 여백 표준
+- 오탈자 자동 교정
+
+### 제안서 작성 지원
+- **입찰공고문/제안요청서 체크리스트 자동 생성**
+- 정성·정량 평가표 자동 작성 보조
+- PDF/HWP/HWPX 입력 모두 지원
+
+### 고급 기능
+- Self-MoA (다중 AI 생성 + 통합) — 정확도 +3~7%
+- Gemini Batch API (50% 할인) — 긴 작업용
+- Ollama/OpenAI/Anthropic 등 다른 AI 백엔드 선택 가능
+- MCP 서버 (Claude Desktop 등과 연동)
+
+### 보안
+- API 키는 Windows 자격증명 관리자 (Keychain) 에 안전 보관
+- 모든 처리 **로컬 실행** (Gemini 호출 외엔 외부 전송 없음)
+- AI 공시 자동 (AI 기본법 준수)
+
+---
+
+## 🎯 사용 대상
+
+- **공무원**: 공문서/보고서/기획안 반복 작성
+- **행정사**: 민원·인허가 서류 자동화
+- **법무사**: 등기·소송서류 템플릿
+- **변호사**: 준비서면·의견서 보조
+- 기타 한글 문서 반복 업무가 있는 모든 사무직
+
+---
+
+## ❓ 자주 묻는 질문
+
+### Q. 무료인가요?
+네, **무료입니다**. 대신 앱 내에 쿠팡 파트너스 광고가 표시됩니다 (차단 가능).
+
+### Q. API 키가 필요한가요?
+Gemini API 키가 필요합니다. **Google AI Studio** 에서 무료로 받을 수 있습니다:
+- https://aistudio.google.com/apikey
+- 월 1,500회 무료 (개인 사용엔 충분)
+
+### Q. 데이터가 외부로 전송되나요?
+AI 처리 (Gemini 호출) 시에만 전송됩니다. 문서 내용 자체는 로컬 저장되고 외부 서버에 저장되지 않습니다.
+
+### Q. Mac 에서도 쓸 수 있나요?
+현재는 Windows 만 지원합니다 (HWPX 파일이 주로 한국 Windows 환경에서 사용).
+
+### Q. 회사 PC 에 설치해도 되나요?
+네. 관리자 권한 없이 현재 사용자 계정에만 설치됩니다 (`%LOCALAPPDATA%\Programs`).
+
+### Q. 제거 방법은?
+**설정 → 앱 → 설치된 앱 → HWPX Automation → 제거**. 사용자 설정은 제거 시 그대로 보존됩니다.
+
+### Q. 업데이트가 안 돼요.
+앱 재시작 후 **메뉴 → 업데이트 확인** 또는 위 "최신 설치 파일" 링크에서 수동 다운로드 후 재설치해도 됩니다 (사용자 설정은 보존).
+
+---
+
+## 🛠 개발자용
+
+### 소스에서 실행
 
 ```powershell
-pip install -r requirements.txt
+git clone https://github.com/Tankongj/hwpx-automation.git
+cd hwpx-automation
+pip install -e ".[dev,build]"
 python -m src.main
 ```
 
-### 2. AI 백엔드 선택 (v0.2.0~)
-
-앱에는 3가지 AI 백엔드가 있습니다. 환경에 맞게 선택:
-
-| 백엔드 | 비용 | 정확도 | 프라이버시 | 언제 쓰나 |
-|---|---|---|---|---|
-| **Gemini** (기본) | ~₩10/문서 | 🟢 높음 | 🔴 Google 서버로 전송 | 일반 사용 |
-| **Ollama** (로컬) | **0 원** | 🟢 높음 | 🟢 **완전 오프라인** | 공공기관 / 법무 / 민감 정보 |
-| **사용 안 함** | 0 원 | 🟡 결정론만 | 🟢 네트워크 없음 | 기호 명확한 원고 |
-
-앱이 뜨자마자 **API Key 입력 다이얼로그**가 나옵니다 (Gemini 경로):
-
-1. [Google AI Studio](https://aistudio.google.com/apikey) 로그인 → "Create API key" 클릭
-2. 생성된 `AIza...` 문자열 복사 → 다이얼로그에 붙여넣기
-3. **연결 테스트** → "사용 가능 모델 N개" → **저장**
-
-키는 Windows 자격 증명 관리자(keyring)에 암호화 저장됩니다.
-
-**Ollama 로컬 백엔드 사용하려면** (선택):
-
-1. https://ollama.com/download 에서 Windows 설치
-2. `ollama pull qwen2.5:7b` (또는 다른 모델)
-3. 앱의 **설정 탭** → AI 백엔드 → **Ollama** 선택 → **서버 확인** → 저장
-
-이후 변환은 원고 한 자도 외부로 전송되지 않습니다.
-
-### 3. 원고 준비
-
-원고 `.txt` 파일의 계층 기호 예시:
-
-```
-# 2026년 귀농귀촌 아카데미 운영 제안서  ← 표지 제목
-
-# Ⅰ. 기관현황                              ← 1단계 (장)
-
-## 1. 일반현황                             ← 2단계 (절)
-
-### 1) 제안사 현황                          ← 3단계 (소절)
-
-(1) 기관 개요                              ← 4단계
-
-① 주요 사업                                 ← 5단계
-
-□ 교육 운영                                ← 6단계 (대주제)
-
-❍ 온라인 콘텐츠 제작                        ← 7단계 (중주제)
-
-- 연간 50편 이상                           ← 8단계 (하이픈)
-
-· 평균 15분 분량                           ← 9단계 (가운뎃점)
-
-※ 자세한 내용은 부록 참조                   ← 10단계 (주석)
-```
-
-### 4. 변환 실행
-
-1. **변환 탭** 선택
-2. 템플릿 드롭다운에서 "기본 10단계 스타일" 확인
-3. **원고: 파일 선택...** → 방금 만든 `.txt`
-4. **변환 실행** 클릭
-
-5~10초 뒤 진행 로그에 `✅ 변환 완료` 출력.
-
-### 5. 결과 확인 & 저장
-
-- **미리보기 탭으로** — HTML 렌더로 계층/서식 확인
-- **다른 이름으로 저장...** — 원하는 경로로 사본 복사
-- **한/글로 열기** — 한/글이 설치돼 있으면 바로 실행
-
-기본 저장 경로: `%USERPROFILE%\Documents\HwpxAutomation\`
-
----
-
-## 주요 기능
-
-| 탭 | 기능 |
-|---|---|
-| **변환** | 템플릿 선택 → 원고 업로드 → 변환 실행 → 실시간 로그 |
-| **템플릿 관리** | 번들 기본 템플릿 + 사용자 공고 HWPX 업로드·관리. 각 템플릿의 폰트/페이지 설정 상세 표시 |
-| **미리보기** | 생성된 HWPX 를 HTML 로 렌더 (QTextBrowser) |
-| **설정** | API Key 관리, Gemini 모델/일일 한도, 애매 기준 길이, 로그·템플릿·앱데이터 폴더 열기 |
-
-### 고급 팁
-
-- **비용 줄이기**: 설정 탭 "애매 기준 길이" 50 → 80 으로 올리면 Gemini 호출 토큰이 반으로 줍니다 (원고 특성에 따라 ₩5 → ₩3 수준).
-- **공고 양식 업로드**: 템플릿 관리 탭에서 기관별 공고 HWPX 를 등록하면, 해당 양식의 폰트/여백/스타일이 그대로 반영됩니다.
-- **CLI 배치 처리**: GUI 없이 여러 원고를 한 번에 돌리려면 CLI 사용:
-  ```powershell
-  python -m src.cli build --template tpl.hwpx --txt input.txt --output out.hwpx --use-gemini --verify
-  ```
-
----
-
-## 자세한 문서
-
-- [USAGE.md](docs/USAGE.md) — GUI/CLI 전체 레퍼런스
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) — 내부 구조 (개발자용)
-- [기획안_v1.md](기획안_v1.md) — 설계 원본
-- [CHANGELOG.md](CHANGELOG.md) — 버전 히스토리
-
----
-
-## 요구 사항
-
-- Windows 10 이상
-- **개발 모드**: Python 3.11+
-- **배포 모드**: 빌드된 `dist/HwpxAutomation/` 폴더 — 추가 설치 불필요
-- Gemini API Key (무료 티어 충분, [aistudio.google.com/apikey](https://aistudio.google.com/apikey))
-
----
-
-## 개발자용
+### 빌드
 
 ```powershell
-# 소스에서 실행
-python -m src.main
-
-# CLI
-python -m src.cli build --template <T.hwpx> --txt <I.txt> --output <O.hwpx>
-
-# 테스트
-python -m pytest tests/
-
-# 빌드
-pyinstaller build.spec --clean --noconfirm
-# 결과: dist/HwpxAutomation/
+pyinstaller build.spec --noconfirm
+# 결과: dist/HwpxAutomation/HwpxAutomation.exe
 ```
 
-85 테스트 통과 (엔진 구조 + GUI smoke + Gemini 스키마 mock). 구조적 검증 7/7.
+### 테스트
 
-자세한 구조는 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) 참고.
+```powershell
+pytest tests/ -q
+# 488 passed, 8 skipped (optional deps 자동 skip)
+```
 
----
+### 릴리스 (관리자만)
 
-## 라이선스
-
-**MIT** (이 저장소 자체). 포함된 v1 엔진(Tankongj/hwpx-proposal-automation) 도 원본 MIT 유지.
-
-런타임 의존성:
-- PySide6 — LGPL v3 (동적 링크로 준수)
-- lxml — BSD
-- google-genai — Apache 2.0
-- cryptography — Apache 2.0 / BSD
-- keyring — MIT
-
-자세한 내용은 [LICENSE](LICENSE).
+```powershell
+# main 에 변경사항 push 후
+git tag v0.x.x
+git push origin v0.x.x
+# → GitHub Actions 가 자동으로 빌드 + installer + Firebase 배포
+```
 
 ---
 
-## 로드맵 (v0.3.0+)
+## 📜 라이선스
 
-- 정량제안서 모드 (서식 채우기)
-- 제출서류 체크리스트 (RFP PDF → LLM 추출 + OCR)
-- OpenAI / Anthropic 백엔드 추가 (ResolverClient 위에 얹기)
-- Self-MoA (단일 모델 N회 + aggregator)
-- 모델 목록 런타임 조회 / 원격 가격표
-- 상업화 (회원제 + 광고)
+**MIT License** — 자유롭게 사용·수정·배포 가능. 자세한 내용은 [LICENSE](LICENSE) 참조.
+
+## 🔗 관련 링크
+
+- [GitHub Releases](https://github.com/Tankongj/hwpx-automation/releases) — 모든 버전 다운로드
+- [CHANGELOG](CHANGELOG.md) — 버전별 변경사항
+- [Issues](https://github.com/Tankongj/hwpx-automation/issues) — 버그 신고 / 기능 요청
+- [자동 업데이트 Manifest](https://hwpx-automation.web.app/api/manifest.json) — 현재 최신 버전 정보
+
+---
+
+<div align="center">
+
+**🇰🇷 Made in Korea · 한국 공공·법무 시장을 위해 설계**
+
+문의: [GitHub Issues](https://github.com/Tankongj/hwpx-automation/issues)
+
+</div>
