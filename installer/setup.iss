@@ -45,9 +45,10 @@ LicenseFile=..\LICENSE
 ; 빌드 설정
 OutputDir=output
 OutputBaseFilename=HwpxAutomation-Setup-v{#Version}
-Compression=lzma2/ultra64
+; ultra64 는 6GB+ RAM 필요 → GitHub Actions runner (7GB) OOM. max 는 ~1.5GB 로 안전.
+Compression=lzma2/max
 SolidCompression=yes
-LZMANumBlockThreads=4
+LZMANumBlockThreads=1
 
 ; 64-bit 앱
 ArchitecturesInstallIn64BitMode=x64compatible
