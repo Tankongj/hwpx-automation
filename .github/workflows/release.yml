@@ -151,8 +151,11 @@ jobs:
           generate_release_notes: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy to Firebase Hosting
+      - name: Deploy to Firebase Hosting (optional, soft-fail)
+        # v0.17.7: Firebase 인증 deprecate 이슈로 soft-fail. 배포 자체는 GitHub Releases 만으로 충분.
+        # 추후 Firebase service account 방식으로 전환 시 이 step 살릴 수 있음.
         if: env.FIREBASE_TOKEN != ''
+        continue-on-error: true
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
